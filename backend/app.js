@@ -15,7 +15,7 @@ app.use(cors())
 
 //routes
 readdirSync('./routes').map((route) => app.use('/api/v1', require('./routes/' + route)))
-
+// Delete when finished
 app.get('/', (req, res) => {
     res.send('Hello World')
 })
