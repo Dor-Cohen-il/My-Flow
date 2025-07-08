@@ -15,7 +15,7 @@ exports.addIncome = async (req, res) => {
 
     try {
         //Validations
-        if(!title || !category || !description){
+        if(!title || !category || !amount || !date){
             return res.status(400).json({message: 'All fields are required'})
         }
         if(amount <= 0 || !amount=== 'number'){
