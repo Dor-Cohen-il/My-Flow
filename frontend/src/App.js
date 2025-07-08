@@ -8,9 +8,12 @@ import React from "react";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Incomes from "./components/Incomes/Incomes";
 import Expenses from "./components/Expenses/Expenses";
+import { useGlobalContext } from "./context/globalContext";
 
 function App() {
     const [active, setActive] = React.useState(1);
+    const global = useGlobalContext()
+    console.log(global);
     // Memoizing the Orb component to prevent unnecessary re-renders
     const orbMemo = useMemo(() => {
     return <Orb />
