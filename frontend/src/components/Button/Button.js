@@ -20,14 +20,14 @@ const ButtonStyled = styled.button`
     outline: none;
     border: none;
     font-family: inherit;
-    font-size: inherit;
+    font-size: 18px;
     display: flex;
     align-items: center;
     gap: .5rem;
     cursor: pointer;
     transition: all .4s ease-in-out;
     max-width: 306px;
-    width: 100%;
+    width: 70%;
     &:hover{
         transform: scale(1.05);
         box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.06);

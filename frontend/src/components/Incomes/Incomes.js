@@ -5,8 +5,9 @@ import Form from "../Form/Form";
 import { useGlobalContext } from "../../context/globalContext";
 import IncomeItem from "../IncomeItem/IncomeItem";
 
+
 function Incomes() {
-  const {addIncome, incomes, getIncome} = useGlobalContext();
+  const {addIncome, incomes, getIncome, deleteIncome} = useGlobalContext();
   useEffect(() => {
     getIncome();
   }, [incomes]);
@@ -29,9 +30,8 @@ function Incomes() {
                   amount={amount}
                   category={category}
                   indicatorColor="var(--color-green)"
-                  // ודא שאתה מעביר את ה-date ואת ה-deleteItem, אחרת הקומפוננטה IncomeItem לא תעבוד כראוי
                   date={date}
-                  deleteItem={() => console.log('Delete functionality not passed yet')} // החלף בפונקציה האמיתית שלך
+                  deleteItem={deleteIncome}
               />
             })}
         </div>
@@ -41,7 +41,14 @@ function Incomes() {
   );
 }
 const IncomesStyled = styled.div`
-
+display: flex;
+overflow: auto;
+.income-content {
+display: flex;
+gap: 2rem;
+  .incomes{
+  flex: 1;}
+}
 `;
 
 export default Incomes;

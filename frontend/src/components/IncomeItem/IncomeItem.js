@@ -1,12 +1,59 @@
 import React from "react";
 import styled from "styled-components";
-import { dollar, calender, comment, trash } from "../../utils/icons";
+import { bitcoin, book, calender, card, circle, clothing, comment, dollar, food, freelance, medical, money, piggy, stocks, takeaway, trash, tv, users, yt } from '../../utils/icons';
 import Button from "../Button/Button";
 
 function IncomeItem({ id, title, amount, date, category, description, deleteItem, indicatorColor, type }) {
+  const categoryIcon = () =>{
+      switch(category) {
+          case 'salary':
+              return money;
+          case 'freelancing':
+              return freelance;
+          case 'investments':
+              return stocks;
+          case 'stocks':
+              return users;
+            case 'bitcoin':
+                return bitcoin;
+            case 'bank':
+                return card;
+            case 'youtube':
+                return yt;
+            case 'other':
+                return piggy;
+            default:
+                return ''
+        }
+    }
+
+    const expenseCatIcon = () => {
+        switch (category) {
+            case 'education':
+                return book;
+            case 'groceries':
+                return food;
+            case 'health':
+                return medical;
+            case 'subscriptions':
+                return tv;
+            case 'takeaways':
+                return takeaway;
+            case 'clothing':
+                return clothing;
+            case 'travelling':
+                return freelance;
+            case 'other':
+                return circle;
+            default:
+                return ''
+        }
+    }
+
   return (
         <IncomeItemStyled indicator={indicatorColor}>
             <div className="icon">
+                {type === 'expense' ? expenseCatIcon() : categoryIcon()}
             </div>
             <div className="content">
                 <h5>{title}</h5>
@@ -40,18 +87,18 @@ const IncomeItemStyled = styled.div`
     background: #FCF6F9;
     border: 2px solid #FFFFFF;
     box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.06);
-    border-radius: 20px;
-    padding: 1rem;
+    border-radius: 10px;
+    padding: 0.5rem;
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    width: 100%;
+    gap: 0rem;
     color: #222260;
+    height: 8rem;
     .icon{
-        width: 80px;
-        height: 80px;
-        border-radius: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
         background: #F5F5F5;
         display: flex;
         align-items: center;
@@ -67,8 +114,9 @@ const IncomeItemStyled = styled.div`
         display: flex;
         flex-direction: column;
         gap: .2rem;
+        max-width: 600px;
         h5{
-            font-size: 1.3rem;
+            font-size: 1rem;
             padding-left: 2rem;
             position: relative;
             &::before{

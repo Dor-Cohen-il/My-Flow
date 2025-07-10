@@ -5,8 +5,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useGlobalContext } from "../../context/globalContext";
 import Button from "../Button/Button";
 import { plus } from "../../utils/icons";
+
 function Form() {
-    const {addIncome} = useGlobalContext()
+    const {addIncome, getIncome} = useGlobalContext()
     const [inputState, setInputState] = React.useState({
         title: '',
         amount: '',
@@ -27,6 +28,7 @@ function Form() {
     const handleSubmit = (e) => {
         e.preventDefault();
         addIncome(inputState);
+        getIncome();
     }
     return (
         <FormStyled onSubmit={handleSubmit}>   
@@ -94,10 +96,10 @@ function Form() {
     const FormStyled = styled.form`
      display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
 
     input, textarea, select {
-        width: 100%;
+        width: 70%;
         font-family: inherit;
         font-size: inherit;
         outline: none;

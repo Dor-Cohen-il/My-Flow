@@ -13,7 +13,6 @@ import { useGlobalContext } from "./context/globalContext";
 function App() {
     const [active, setActive] = React.useState(1);
     const global = useGlobalContext()
-    console.log(global);
     // Memoizing the Orb component to prevent unnecessary re-renders
     const orbMemo = useMemo(() => {
     return <Orb />
@@ -55,7 +54,7 @@ const AppStyled = styled.div`
     background: rgba(252, 246, 249, 0.78);
     border: 3px solid #FFFFFF;
     backdrop-filter: blur(4.5px);
-    border-radius: 32px;
+    border-radius: 10px;
     height: 90vh;
     overflow: auto;
     overflow-x: hidden;

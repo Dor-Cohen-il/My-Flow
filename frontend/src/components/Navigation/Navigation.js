@@ -39,12 +39,12 @@ function Navigation({active, setActive}) {
 const NavStyled = styled.nav`
     padding: 2rem, 1.5rem;
     width: 25%;
-    min-width: 220px;  
-    max-width: 400px;
+    min-width: 110px;  
+    max-width: 200px;
     height: 90vh;
     background: rgba(2252, 246, 249, 0.78);
     border: 3px solid #FFFFFF;
-    border-radius: 32px;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -70,6 +70,7 @@ const NavStyled = styled.nav`
             z-index: 1;
         }
         h2{
+            margin-top: 50px;
             color: rgba(34, 34, 96, 1);
         }
         p{

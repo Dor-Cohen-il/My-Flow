@@ -24,18 +24,21 @@ export const GlobalProvider = ({ children }) => {
         try {
             const response = await axios.get(`${BASE_URL}/get-income`);
             setIncomes(response.data)
-            console.log("Get Incomes works")
         } catch (err) {
             setError(err.response?.data?.message || err.message);
         }
     }
     getIncome();
+    const deleteIncome = async (id) => {
+        const res = await axios.delete(`${BASE_URL}/delete-income/${id}`);
+    }
 
     return (
     <GlobalContext.Provider value={{
         addIncome,
         getIncome,
-        incomes
+        incomes,
+        deleteIncome
     }}>
       {children}
     </GlobalContext.Provider>
