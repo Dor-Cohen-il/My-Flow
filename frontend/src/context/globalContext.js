@@ -22,8 +22,8 @@ export const GlobalProvider = ({ children }) => {
     }
     const getIncome = async (income) => {
         try {
-            const response = await axios.get(`${BASE_URL}/get-income/`);
-            setIncomes(response.date)
+            const response = await axios.get(`${BASE_URL}/get-income`);
+            setIncomes(response.data)
             console.log("Get Incomes works")
         } catch (err) {
             setError(err.response?.data?.message || err.message);
