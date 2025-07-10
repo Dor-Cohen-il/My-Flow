@@ -29,6 +29,13 @@ function Form() {
         e.preventDefault();
         addIncome(inputState);
         getIncome();
+        setInputState({
+        title: '',
+        amount: '',
+        date: new Date(),
+        category: '',
+        description: ''
+        })
     }
     return (
         <FormStyled onSubmit={handleSubmit}>   

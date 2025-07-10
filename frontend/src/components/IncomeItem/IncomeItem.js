@@ -3,6 +3,15 @@ import styled from "styled-components";
 import { bitcoin, book, calender, card, circle, clothing, comment, dollar, food, freelance, medical, money, piggy, stocks, takeaway, trash, tv, users, yt } from '../../utils/icons';
 import Button from "../Button/Button";
 
+function formatCurrency(amount, currencyCode = 'USD') {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currencyCode,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+}
+
 function IncomeItem({ id, title, amount, date, category, description, deleteItem, indicatorColor, type }) {
   const categoryIcon = () =>{
       switch(category) {
@@ -56,27 +65,24 @@ function IncomeItem({ id, title, amount, date, category, description, deleteItem
                 {type === 'expense' ? expenseCatIcon() : categoryIcon()}
             </div>
             <div className="content">
-                <h5>{title}</h5>
+                <h5>{title} - {formatCurrency(amount)} </h5>
+                <div className="title-place"></div>
                 <div className="inner-content">
                     <div className="text">
-                        <p>{dollar} {amount}</p>
                         <p>{calender} {date} </p>
-                        <p>
-                            {comment}
-                            {description}
+                        <p>{comment}{description} </p>
+                        <p style={{ marginleft: '80px' }}>
+                            <Button
+                                icon={trash}
+                                bPad={'0.5rem'}
+                                bRad={'5%'}
+                                bg={'var(--primary-color'}
+                                color={'#fff'}
+                                iColor={'#fff'}
+                                hColor={'var(--color-green)'}
+                                onClick={() => deleteItem(id)}
+                            />
                         </p>
-                    </div>
-                    <div className="btn-con">
-                        <Button 
-                            icon={trash}
-                            bPad={'1rem'}
-                            bRad={'50%'}
-                            bg={'var(--primary-color'}
-                            color={'#fff'}
-                            iColor={'#fff'}
-                            hColor={'var(--color-green)'}
-                            onClick={() => deleteItem(id)}
-                        />
                     </div>
                 </div>
             </div>
@@ -89,7 +95,7 @@ const IncomeItemStyled = styled.div`
     box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.06);
     border-radius: 10px;
     padding: 0.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
     gap: 0rem;
@@ -101,9 +107,10 @@ const IncomeItemStyled = styled.div`
         border-radius: 10px;
         background: #F5F5F5;
         display: flex;
-        align-items: center;
-        justify-content: center;
+        align-items: left;
+        justify-content: left;
         border: 2px solid #FFFFFF;
+        margin-right: 1rem;
         i{
             font-size: 2.6rem;
         }
@@ -117,7 +124,7 @@ const IncomeItemStyled = styled.div`
         max-width: 600px;
         h5{
             font-size: 1rem;
-            padding-left: 2rem;
+            padding-left: 1rem;
             position: relative;
             &::before{
                 content: '';
@@ -130,6 +137,7 @@ const IncomeItemStyled = styled.div`
                 border-radius: 50%;
                 background: ${props => props.indicator};
             }
+        .title-placer{}
         }
 
         .inner-content{
@@ -139,11 +147,11 @@ const IncomeItemStyled = styled.div`
             .text{
                 display: flex;
                 align-items: center;
-                gap: 1.5rem;
+                gap: 0.5rem;
                 p{
                     display: flex;
-                    align-items: center;
-                    gap: 0.5rem;
+                    align-items: left;
+                    gap: 0.2rem;
                     color: var(--primary-color);
                     opacity: 0.8;
                 }

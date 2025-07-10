@@ -10,7 +10,7 @@ function Incomes() {
   const {addIncome, incomes, getIncome, deleteIncome} = useGlobalContext();
   useEffect(() => {
     getIncome();
-  }, [incomes]);
+  }, []);
   return (
     <IncomesStyled>
         <InnerLayout>
