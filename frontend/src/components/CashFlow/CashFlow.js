@@ -1,52 +1,47 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react"; // Import useState
 import styled from "styled-components";
 import { InnerLayout } from "../../styles/layout";
-import ExpenseForm from "../Form/ExpenseForm";
 import { useGlobalContext } from "../../context/globalContext";
+import DatePicker from "react-datepicker"; // Import DatePicker for UI controls
+import "react-datepicker/dist/react-datepicker.css"; // Import DatePicker CSS
 
-function Expenses() {
-  const {addExpense, expenses, getExpense, deleteExpense} = useGlobalContext();
+function Cashflow() {
+  const { getCashFlow, cashFlowReport, error } = useGlobalContext();
+
+  // Use state for user-selectable dates and interval
+  const [selectedStartDate, setSelectedStartDate] = useState(new Date("2025-07-01")); // Default to beginning of a month for example
+  const [selectedEndDate, setSelectedEndDate] = useState(new Date("2025-07-31"));   // Default to end of a month
+  const [selectedInterval, setSelectedInterval] = useState('monthly'); // Default interval
+
+  // This useEffect will run when selectedStartDate, selectedEndDate, or selectedInterval changes
   useEffect(() => {
-    getExpense();
-  }, []);
+    // Only call getCashFlow if all selected values are valid
+    if (selectedStartDate instanceof Date && !isNaN(selectedStartDate) &&
+        selectedEndDate instanceof Date && !isNaN(selectedEndDate) &&
+        selectedInterval) {
+    }
+  }, [getCashFlow, selectedStartDate, selectedEndDate, selectedInterval]); // Dependencies are now state variables
+
   return (
     <ExpenseStyled>
-        <InnerLayout>
-      <h1>Expenses</h1>
-      <div className="expense-content">
-        <div className="form-container">
-          <ExpenseForm />
-        </div>
-        <div className="expense">
-          {expenses && Array.isArray(expenses) && expenses.map((expense) => {
-              const {_id, title, amount, date, category, description, type} = expense;
-              return <ExpenseItem
-                  key={_id}
-                  id={_id}
-                  title={title}
-                  description={description}
-                  amount={amount}
-                  category={category}
-                  indicatorColor="var(--color-red)"
-                  date={date}
-                  deleteItem={deleteExpense}
-              />
-            })}
-        </div>
-      </div>
-    </InnerLayout>
+      <InnerLayout>
+        <h1>CashFlow</h1>
+      
+      </InnerLayout>
     </ExpenseStyled>
   );
 }
+
 const ExpenseStyled = styled.div`
-display: flex;
-overflow: auto;
-.expense-content {
-display: flex;
-gap: 2rem;
-  .expenses{
-  flex: 1;}
-}
+  display: flex;
+  overflow: auto;
+  .expense-content {
+    display: flex;
+    gap: 2rem;
+    .expenses {
+      flex: 1;
+    }
+  }
 `;
 
-export default Expenses;
+export default Cashflow;

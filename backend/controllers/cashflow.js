@@ -39,23 +39,23 @@ const incomes = await IncomeSchema.find({
 // אותה לוגיקה עבור הוצאות:
 const expenses = await ExpenseSchema.find({
     $or: [
+        // תנאי א': הכנסות שתקופתן חופפת את טווח המסנן.
+        // הכנסות שמתחילות לפני או בתאריך הסיום של המסנן, ומסתיימות אחרי או בתאריך ההתחלה של המסנן.
         {
             start_date: { $lte: parsedEndDate },
             end_date: { $gte: parsedStartDate }
         },
+        // תנאי ב': הכנסות חד פעמיות שמתחילות בטווח המסנן והלאה.
         {
             $and: [
-                { frequency: { $ne: 'one-time' } }, // כפי שהגדרת קודם, הוצאות לא חד פעמיות
-                {
-                    $or: [ // ותאריך הסיום שלהן עונה על אחד התנאים האלה
-                        { end_date: { $lte: parsedEndDate } },
-                        { end_date: { $gte: parsedStartDate } }
-                    ]
-                }
+                { frequency: 'one-time' },
+                { start_date: { $gte: parsedStartDate } }
             ]
         }
     ]
 }).sort({ createdAt: -1 });
+
+
         // החזרת התוצאות
         res.status(200).json({ incomes, expenses });
 

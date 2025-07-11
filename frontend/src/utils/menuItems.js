@@ -8,9 +8,9 @@ export const menuItems = [
     },
     {
         id: 2,
-        title: 'View Transactions',
+        title: 'Cashflow',
         icon: transactions,
-        link: '/dashboard',
+        link: '/cashflow',
     },
     {
         id: 3,
