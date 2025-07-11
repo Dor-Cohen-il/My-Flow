@@ -11,6 +11,16 @@ function formatCurrency(amount, currencyCode = 'USD') {
     maximumFractionDigits: 2,
   }).format(amount);
 }
+  const formatDate = (isoDateString) => {
+    if (!isoDateString) return ''; // Handle cases where date might be null or undefined
+    const dateObject = new Date(isoDateString);
+    const options = {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    };
+    return dateObject.toLocaleDateString('en-GB', options);
+  };
 
 function IncomeItem({ id, title, amount, date, category, description, deleteItem, indicatorColor, type }) {
   const categoryIcon = () =>{
@@ -36,40 +46,17 @@ function IncomeItem({ id, title, amount, date, category, description, deleteItem
         }
     }
 
-    const expenseCatIcon = () => {
-        switch (category) {
-            case 'education':
-                return book;
-            case 'groceries':
-                return food;
-            case 'health':
-                return medical;
-            case 'subscriptions':
-                return tv;
-            case 'takeaways':
-                return takeaway;
-            case 'clothing':
-                return clothing;
-            case 'travelling':
-                return freelance;
-            case 'other':
-                return circle;
-            default:
-                return ''
-        }
-    }
-
   return (
         <IncomeItemStyled indicator={indicatorColor}>
             <div className="icon">
-                {type === 'expense' ? expenseCatIcon() : categoryIcon()}
+                {categoryIcon()}
             </div>
             <div className="content">
                 <h5>{title} - {formatCurrency(amount)} </h5>
                 <div className="title-place"></div>
                 <div className="inner-content">
                     <div className="text">
-                        <p>{calender} {date} </p>
+                        <p>{calender} {formatDate(date)} </p>
                         <p>{comment}{description} </p>
                         <p style={{ marginleft: '80px' }}>
                             <Button
