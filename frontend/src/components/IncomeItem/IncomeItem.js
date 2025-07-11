@@ -2,25 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { bitcoin, book, calender, card, circle, clothing, comment, dollar, food, freelance, medical, money, piggy, stocks, takeaway, trash, tv, users, yt } from '../../utils/icons';
 import Button from "../Button/Button";
-
-function formatCurrency(amount, currencyCode = 'USD') {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: currencyCode,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(amount);
-}
-  const formatDate = (isoDateString) => {
-    if (!isoDateString) return ''; // Handle cases where date might be null or undefined
-    const dateObject = new Date(isoDateString);
-    const options = {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    };
-    return dateObject.toLocaleDateString('en-GB', options);
-  };
+import { dateFormat } from "../../utils/dateFormat";
+import formatCurrency from "../../utils/formatCurrency";
 
 function IncomeItem({ id, title, amount, date, category, description, deleteItem, indicatorColor, type }) {
   const categoryIcon = () =>{
@@ -56,7 +39,7 @@ function IncomeItem({ id, title, amount, date, category, description, deleteItem
                 <div className="title-place"></div>
                 <div className="inner-content">
                     <div className="text">
-                        <p>{calender} {formatDate(date)} </p>
+                        <p>{calender} {dateFormat(date)} </p>
                         <p>{comment}{description} </p>
                         <p style={{ marginleft: '80px' }}>
                             <Button

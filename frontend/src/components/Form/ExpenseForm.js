@@ -7,12 +7,12 @@ import Button from "../Button/Button";
 import { plus } from "../../utils/icons";
 
 function ExpenseForm() {
-    const {addExpense, getExpense} = useGlobalContext()
+    const {addExpense, getExpense, error} = useGlobalContext()
     const [inputState, setInputState] = React.useState({
         title: '',
         amount: '',
         date: new Date(),
-        category: '',
+        category: 'other',
         description: ''
     });
 
@@ -33,12 +33,13 @@ function ExpenseForm() {
         title: '',
         amount: '',
         date: new Date(),
-        category: '',
+        category: 'other',
         description: ''
         })
     }
     return (
-        <FormStyled onSubmit={handleSubmit}>   
+        <FormStyled onSubmit={handleSubmit}>
+            {error && <p className="error">{ error }</p>}   
             <div className="input-control">
                 <input 
                     type="text" 

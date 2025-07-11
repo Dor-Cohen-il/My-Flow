@@ -56,10 +56,7 @@ const AppStyled = styled.div`
     backdrop-filter: blur(4.5px);
     border-radius: 10px;
     height: 90vh;
-    overflow-x: hidden;
-    &&::-webkit-scrollbar {
-    width: 0;
-    }
+    overflow: scroll;
   }
 `;
 
