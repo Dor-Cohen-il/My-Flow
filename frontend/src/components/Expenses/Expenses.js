@@ -7,10 +7,17 @@ import ExpenseItem from "../IncomeItem/ExpenseItem";
 
 
 function Expenses() {
-  const {addExpense, expenses, getExpense, deleteExpense} = useGlobalContext();
+  const {expenses, getExpense, deleteExpense} = useGlobalContext();
   useEffect(() => {
     getExpense();
-  }, []);
+  }, [getExpense]);
+
+  const handleExpenseUpdate = (updatedAsset) => {
+    const updatedExpenses = expenses.map(expense =>
+      expense._id === updatedAsset._id ? updatedAsset : expense
+    );
+    getExpense();
+  }
   return (
     <ExpenseStyled>
         <InnerLayout>
@@ -23,16 +30,13 @@ function Expenses() {
           {expenses && Array.isArray(expenses) && expenses.map((expense) => {
               const {_id, title, amount, date, category, description, type} = expense;
               return <ExpenseItem
-                  key={_id}
-                  id={_id}
-                  title={title}
-                  description={description}
-                  amount={amount}
-                  category={category}
-                  indicatorColor="var(--color-red)"
-                  date={date}
-                  deleteItem={deleteExpense}
-              />
+                        key={_id}
+                        expense={expense} // Pass the entire income object
+                        onDelete={deleteExpense} // Renamed from deleteItem to onDelete for clarity in IncomeItem
+                        indicatorColor="var(--color-green)" // Passed as a prop
+                        // Pass the handleIncomeUpdate function as onUpdateSuccess
+                        onUpdateSuccess={handleExpenseUpdate}
+                      />
             })}
         </div>
       </div>

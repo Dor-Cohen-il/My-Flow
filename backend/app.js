@@ -3,7 +3,7 @@ const cors = require('cors');
 const { db } = require('./db/db');
 const {readdirSync} = require('fs')
 const app = express()
-
+const bcrypt = require('bcrypt')
 require('dotenv').config()
 
 const PORT = process.env.PORT
@@ -20,9 +20,11 @@ app.get('/', (req, res) => {
     res.send('Hello World')
 })
 
+const users = []
+
+
 const server = () => {
     db()
-    console.log('You are listening to port:', PORT);
     app.listen(PORT, () => {
         console.log('Listening to port:', PORT)
     })

@@ -15,7 +15,7 @@ const assetsSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        default:"Asset"
+        default:"asset"
     },
     category: {
         type: String,
@@ -30,4 +30,4 @@ const assetsSchema = new mongoose.Schema({
     },
 }, {timestamps: true})
 
-module.exports = mongoose.model('Asset', assetsSchema)
+module.exports = mongoose.model('asset', assetsSchema)

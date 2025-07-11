@@ -11,12 +11,14 @@ function ExpenseForm() {
     const [inputState, setInputState] = React.useState({
         title: '',
         amount: '',
-        date: new Date(),
+        start_date: new Date(),
+        end_date: null,
+        frequency: 'one-time',
         category: 'other',
         description: ''
     });
 
-    const { title, amount, date, category, description } = inputState;
+    const { title, amount, start_date, category, description, end_date, frequency } = inputState;
 
     const handleInput = (name) => (e) => {
         setInputState({
@@ -32,7 +34,9 @@ function ExpenseForm() {
         setInputState({
         title: '',
         amount: '',
-        date: new Date(),
+        start_date: new Date(),
+        end_date: null,
+        frequency: 'one-time',
         category: 'other',
         description: ''
         })
@@ -51,7 +55,7 @@ function ExpenseForm() {
             </div>
             <div className="input-control">
                 <input value={amount}  
-                    type="text" 
+                    type="number" 
                     name={'amount'} 
                     placeholder={'Expense amount'}
                     onChange={handleInput('amount')} 
@@ -61,12 +65,36 @@ function ExpenseForm() {
                 <DatePicker
                     showIcon
                     id='date'
-                    selected={date}
+                    selected={start_date}
                     dateFormat="dd/MM/yyyy"
                     onChange={(date) => {
-                        setInputState({...inputState, date: date})
+                        setInputState({...inputState, start_date: date})
                     }}
                 />
+            </div>
+            <div className="input-control">
+                <DatePicker
+                    showIcon
+                    id='date'
+                    selected={end_date}
+                    dateFormat="dd/MM/yyyy"
+                    autoComplete="off"
+                    onChange={(date) => {
+                        setInputState({...inputState, end_date: date})
+                    }}
+                />
+            </div>
+            <div className="selects input-control">
+                <select required value={frequency} name="frequency" id="frequency" onChange={handleInput('frequency')}>
+                    <option value='' disabled>Frequency</option>
+                    <option value="one-time">One-time</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="biweekly">Bi-Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="quatrly">Quatrly</option>
+                    <option value="halfyear">Half-Year</option>
+                    <option value="yearly">Yearly</option>  
+                </select>
             </div>
             <div className="selects input-control">
                 <select required value={category} name="category" id="category" onChange={handleInput('category')}>
@@ -322,3 +350,4 @@ function ExpenseForm() {
 `;
 
 export default ExpenseForm;   
+///////////
