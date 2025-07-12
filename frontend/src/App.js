@@ -48,7 +48,7 @@ function App() {
 
 const AppStyled = styled.div`
   height: 100vh;
-  background: url(${props => props.bg}) no-repeat center center fixed;
+  background-color: black;
   position: relative;
   main{
     flex: 1;

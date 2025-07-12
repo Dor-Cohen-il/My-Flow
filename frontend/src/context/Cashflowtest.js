@@ -1,5 +1,7 @@
 const BASE_URL = 'http://localhost:8000/api/v1';
 const axios = require('axios');
+const { DateTime, Duration, Interval} = require('luxon');
+
 
 const setCashFlowData = (data) => {
     console.log("Cash Flow Data Updated:", data);
@@ -8,39 +10,74 @@ const setError = (message) => {
     console.error("Error Set:", message);
 };
 
-function seperatePeriod(endDate1, startDate1, interval) {
-const periodLength = endDate1 - startDate1;
-let intervalInMillieseconds = 0;
-    switch (interval) {
+function getIntervalsByPeriod(startDateString, endDateString, splitIntervalType) {
+    const startDateCalc = DateTime.fromISO(startDateString);
+    const endDateCalc = DateTime.fromISO(endDateString);
+
+    if (!startDateCalc.isValid || !endDateCalc.isValid) {
+        return [];
+    }
+
+    const fullInterval = Interval.fromDateTimes(startDateCalc, endDateCalc);
+
+    let splitDuration;
+    switch (splitIntervalType) {
+        case 'one-time':
+            splitIntervalType = startDateCalc;
         case 'daily':
-            intervalInMillieseconds = 86400000;
+            splitDuration = Duration.fromObject({ days: 1 });
             break;
         case 'weekly':
-            intervalInMillieseconds = 604800000;
+            splitDuration = Duration.fromObject({ weeks: 1 });
             break;
         case 'biweekly':
-            intervalInMillieseconds = 1209600000;
+            splitDuration = Duration.fromObject({ weeks: 2 });
             break;
         case 'monthly':
-            intervalInMillieseconds = 2592000000;
+            splitDuration = Duration.fromObject({ months: 1 });
             break;
         case 'quarterly':
-            intervalInMillieseconds = 7776000000;
+            splitDuration = Duration.fromObject({ months: 3 });
             break;
         case 'yearly':
-            intervalInMillieseconds = 31536000000;
+            splitDuration = Duration.fromObject({ years: 1 });
             break;
         default:
-            break;
+            return splitDuration;
     }
-    return Math.floor(periodLength / intervalInMillieseconds);
+
+    const smallerIntervals = fullInterval.splitBy(splitDuration);
+    const resultDatesList = smallerIntervals.map(interval => interval.start.toISODate());
+
+    return resultDatesList;
 }
 
-const getCashFlow = async (startDate, endDate, interval = 'yearly') => {
+function fromListToArray(oldlist){
+    const newArray = []
+    oldlist.forEach(date => {
+        const pushDate = {intervalDate: date, amount: 0}
+        newArray.push(pushDate)  
+    });
+    return newArray;
+}
+
+function isDateWithinRange(dateToCheckString, startDateString, endDateString) {
+    const dateToCheck = DateTime.fromISO(dateToCheckString).startOf('day'); // נקודת התחלה של יום
+    const startDate = DateTime.fromISO(startDateString).startOf('day');
+    const endDate = DateTime.fromISO(endDateString).endOf('day');
+
+    const range = Interval.fromDateTimes(startDate, endDate);
+
+    return range.contains(dateToCheck);
+}
+
+
+const getCashFlow = async (startDate, endDate, interval) => {
     try {
         const startIso = startDate ? new Date(startDate).toISOString() : '';
         const endIso = endDate ? new Date(endDate).toISOString() : '';
-
+        const emptyCashflowArray = getIntervalsByPeriod(startIso, endIso, interval) // make a list of the dates
+        const cashflowArray = fromListToArray(emptyCashflowArray); //makes an array from the list
         console.log(`Making request to: ${BASE_URL}/get-cashflow?startDate=${startIso}&endDate=${endIso}`);
 
         const response = await axios.get(`${BASE_URL}/get-cashflow?startDate=${startIso}&endDate=${endIso}`);
@@ -57,6 +94,14 @@ const getCashFlow = async (startDate, endDate, interval = 'yearly') => {
             delete item.createdAt;
             delete item.updatedAt;
             delete item.__v;
+            item.start_date = DateTime.fromISO(item.start_date).toFormat('yyyy-MM-dd');
+            item.end_date = DateTime.fromISO(item.end_date).toFormat('yyyy-MM-dd');
+            if (item.frequency != 'one-time') {
+            item.occurs = getIntervalsByPeriod(item.start_date, item.end_date, item.frequency);
+            } else {
+                const dt = DateTime.fromISO(item.start_date);
+                item.occurs = [dt.toFormat('yyyy-MM-dd')];
+            }
         });
         expensesList.forEach(item => {
             delete item._id;
@@ -66,10 +111,44 @@ const getCashFlow = async (startDate, endDate, interval = 'yearly') => {
             delete item.createdAt;
             delete item.updatedAt;
             delete item.__v;
+            item.start_date = DateTime.fromISO(item.start_date);
+            item.end_date = DateTime.fromISO(item.end_date);
+            if (item.frequency != 'one-time') {
+            item.occurs = getIntervalsByPeriod(item.start_date, item.end_date, item.frequency);
+            } else {
+                const dt = DateTime.fromISO(item.start_date);
+                item.occurs = [dt.toFormat('yyyy-MM-dd')];
+            }
         });
-        
-        console.log(seperatePeriod(endDate, startDate, interval))
+
+        cashflowArray.forEach(item => {
+            let amount = 0;
+          const endIntervalDate = item.intervalDate;
+            incomesList.forEach(incomeitem => {
+                incomeitem.occurs.forEach(occursitem => {
+                 if (isDateWithinRange(occursitem, incomeitem.start_date, endIntervalDate) == true) {
+                    amount = amount + incomeitem.amount
+                 } else {
+
+                 }
+                
+                }) 
+            });
+                expensesList.forEach(expenseitem => {
+                expenseitem.occurs.forEach(occursitem => {
+                 if (isDateWithinRange(occursitem, expenseitem.start_date, endIntervalDate) == true) {
+                    amount = amount - expenseitem.amount
+                 } else {
+
+                 }
+                
+                }) 
+            });
+            item.amount = amount;
+        });
+        console.log(cashflowArray)
         setError(null);
+        setCashFlowData(cashflowArray);
         return "Works";
     } catch (err) {
         const errorMessage = err.response?.data?.message || err.message;
@@ -83,11 +162,11 @@ const getCashFlow = async (startDate, endDate, interval = 'yearly') => {
 async function runTest() {
     console.log("Starting getCashFlow test...");
     try {
-        const result = await getCashFlow(new Date("2025-07-11"), new Date("2025-07-18"), 'daily');
+        const result = await getCashFlow(new Date("2025-07-12"), new Date("2026-07-18"), 'weekly');
         console.log("Test finished. Result:", result);
     } catch (e) {
         console.error("Test failed with exception:", e);
     }
 }
 
-runTest();
+runTest()
