@@ -1,0 +1,20 @@
+runtime: nodejs20
+env: standard
+
+handlers:
+  - url: /(.*\.(js|css|png|jpg|jpeg|gif|ico|html|map))$
+    static_files: frontend/build/\1  
+    upload: frontend/build/.*\.(js|css|png|jpg|jpeg|gif|ico|html|map)$
+
+  - url: /.*
+    script: auto
+
+automatic_scaling:
+  min_instances: 0
+  max_instances: 1 
+  target_cpu_utilization: 0.6
+
+
+env_variables:
+  PORT: 8080
+  MONGO_URL: "mongodb+srv://dorc23:gfgZEkvLQ08EfJFA@cluster0.xptptqc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
