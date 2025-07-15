@@ -10,12 +10,12 @@ function Incomes() {
   // Destructure state and functions from your global context
   // Assuming getIncome fetches only income data or you filter it later.
   // We will need to update `incomes` state when an item is successfully updated.
-  const { incomes, getIncome, deleteIncome, /* Add any other context methods you need here */ } = useGlobalContext();
+  const { incomes, getIncome, deleteIncome, updateIncome } = useGlobalContext();
 
   useEffect(() => {
     // Fetch incomes when the component mounts
     getIncome();
-  }, [getIncome]); // Add getIncome to dependency array to ensure it runs if getIncome itself changes (unlikely for a stable context function)
+  }, []); // Add getIncome to dependency array to ensure it runs if getIncome itself changes (unlikely for a stable context function)
 
   // This function will be passed down to each IncomeItem.
   // When an IncomeItem successfully updates itself on the backend,

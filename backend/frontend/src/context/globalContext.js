@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'; // Import useEffect
 import axios from 'axios';
 const { DateTime, Duration, Interval} = require('luxon');
-
 const BASE_URL = 'https://my-flow-692738584656.me-west1.run.app/api/v1';
 
 const GlobalContext = React.createContext();
@@ -26,6 +25,7 @@ export const GlobalProvider = ({ children }) => {
             setError(err.response?.data?.message || err.message);
         }
         getIncome();
+        getCashFlow(); 
     }
     const getIncome = async (income) => {
         try {
@@ -39,11 +39,19 @@ export const GlobalProvider = ({ children }) => {
     const deleteIncome = async (id) => {
         const res = await axios.delete(`${BASE_URL}/delete-income/${id}`);
         getIncome();
+        getCashFlow(); 
     }
 
-    const updateIncome = async (id) => {
-        const res = await axios.put(`${BASE_URL}/update-income/${id}`);
+    const updateIncome = async (id, updatedData) => {
+        const res = await axios.put(`${BASE_URL}/update-income/${id}`, updatedData);
         getIncome();
+        getCashFlow(); 
+    }
+
+        const updateExpense = async (id, updatedData) => {
+        const res = await axios.put(`${BASE_URL}/update-expense/${id}`, updatedData);
+        getExpense();
+        getCashFlow(); 
     }
 
     const totalIncome = () => {
@@ -76,12 +84,12 @@ export const GlobalProvider = ({ children }) => {
     const deleteExpense = async (id) => {
         const res = await axios.delete(`${BASE_URL}/delete-expense/${id}`);
         getExpense();
+        getCashFlow();
     }
 
     const totalExpense = () => {
         let totalExpense = 0
         expenses.forEach((expense) => {
-            console.log(expense)
             totalExpense += expense.amount;
         })
         return totalExpense;
@@ -177,19 +185,16 @@ export const GlobalProvider = ({ children }) => {
         setLoadingCashFlow(true); // Set loading state
         try {
             // Set default dates if not provided
-            const defaultStartDate = DateTime.now().minus({ months: 6 }).startOf('day').toISODate(); // 6 months ago
-            const defaultEndDate = DateTime.now().plus({ months: 6 }).endOf('day').toISODate();    // 6 months from now
-            const defaultInterval = 'monthly'; // Or 'weekly', 'daily' etc.
+            const defaultStartDate = DateTime.now().startOf('day').toJSDate(); // 6 months ago
+            const defaultEndDate = DateTime.now().plus({ months: 12 }).endOf('day').toJSDate();    // 6 months from now
+            const defaultInterval = 'weekly'; // Or 'weekly', 'daily' etc.
             
             const effectiveStartDate = startDate ? new Date(startDate).toISOString() : new Date(defaultStartDate).toISOString();
             const effectiveEndDate = endDate ? new Date(endDate).toISOString() : new Date(defaultEndDate).toISOString();
             const effectiveInterval = interval || defaultInterval;
 
             const emptyCashflowArray = getIntervalsByPeriod(effectiveStartDate, effectiveEndDate, effectiveInterval);
-            const cashflowArray = fromListToArray(emptyCashflowArray);
-            
-            console.log(`Making request to: ${BASE_URL}/get-cashflow?startDate=${effectiveStartDate}&endDate=${effectiveEndDate}`);
-    
+            const cashflowArray = fromListToArray(emptyCashflowArray);    
             const response = await axios.get(`${BASE_URL}/get-cashflow?startDate=${effectiveStartDate}&endDate=${effectiveEndDate}`);
             
             const incomesList = response.data.incomes;
@@ -293,6 +298,8 @@ export const GlobalProvider = ({ children }) => {
             incomes,
             deleteIncome,
             totalIncome,
+            updateIncome,
+            updateExpense,
             addExpense,
             getExpense,
             expenses,

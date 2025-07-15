@@ -6,13 +6,18 @@ import DatePicker from "react-datepicker";
 import { bitcoin, book, calender, card, circle, clothing, repeat, save ,comment, dollar, food, freelance, medical, money, piggy, stocks, takeaway, trash, tv, users, yt, edit, cancel } from '../../utils/icons'; // Added 'edit' icon if you have one. If not, you can add a simple text 'Edit' or use another icon.
 import Button from "../Button/Button";
 import { dateFormat } from "../../utils/dateFormat";
-import formatCurrency from "../../utils/formatCurrency"; // Assuming this utility exists
+import formatCurrency from "../../utils/formatCurrency";
+import { useGlobalContext } from "../../context/globalContext";
+
+
+
 
 // The IncomeItem component now expects 'income' as a single prop object,
 // and 'onDelete', 'onUpdateSuccess' as callback functions.
-function ExpenseItem({ expense, onDelete, onUpdateSuccess, indicatorColor }) { // Added indicatorColor here
+function ExpenseItem({ expense, onDelete, indicatorColor }) { // Added indicatorColor here
     // Destructure properties from the 'income' object
     const { _id, title, amount, start_date, end_date,frequency, category, description, type } = expense;
+    const { updateExpense, getCashFlow } = useGlobalContext();
 
     // State to control edit mode
     const [isEditing, setIsEditing] = useState(false);
@@ -93,8 +98,6 @@ function ExpenseItem({ expense, onDelete, onUpdateSuccess, indicatorColor }) { /
 
         });
     };
-
-    // Handler for clicking the Save button (sends update request to server)
     const handleSaveClick = async () => {
         try {
             // Validate basic input before sending (optional but recommended)
@@ -106,28 +109,15 @@ function ExpenseItem({ expense, onDelete, onUpdateSuccess, indicatorColor }) { /
                 alert('Amount must be positive.');
                 return;
             }
-
             // Your backend API URL for updating an asset
-            const response = await axios.put(
-                `http://localhost:8000/api/v1/update-expense/${editedExpense._id}`,
-                editedExpense // The edited data from state
-            );
-
-            console.log('Update successful:', response.data);
+            updateExpense(editedExpense._id, editedExpense); // Call the updateIncome function from context
             setIsEditing(false); // Exit edit mode
-
-            // Call the callback from the parent component to update the UI
-            if (onUpdateSuccess) {
-                onUpdateSuccess(response.data.asset); // Pass the updated asset object from the server response
-            }
-
         } catch (error) {
             console.error('Error updating income:', error.response ? error.response.data : error.message);
             alert(`Failed to update income: ${error.response ? error.response.data.message : error.message}`);
         }
+        
     };
-
-    // Render logic based on `isEditing` state
     return (
         <ExpenseItemStyled indicator={indicatorColor}>
             <div className="icon">
@@ -190,7 +180,7 @@ function ExpenseItem({ expense, onDelete, onUpdateSuccess, indicatorColor }) { /
                                 bRad={'5%'}
                                 bg={'var(--primary-color)'}
                                 color={'#fff'}
-                                onClick={handleSaveClick}
+                                onClick={() => { handleSaveClick(); }}
                                 text="Save"
                             />
                             <Button
@@ -239,7 +229,7 @@ function ExpenseItem({ expense, onDelete, onUpdateSuccess, indicatorColor }) { /
                                     color={'#fff'}
                                     iColor={'#fff'}
                                     hColor={'var(--color-red)'} // Changed hover to red for delete
-                                    onClick={() => onDelete(_id)} // Use _id directly
+                                    onClick={() => { onDelete(_id); getCashFlow(); }} // Use _id directly
                                 />
                             </div>
                         </div>

@@ -7,12 +7,13 @@ import { bitcoin, book, calender, card, circle, clothing, repeat, save ,comment,
 import Button from "../Button/Button";
 import { dateFormat } from "../../utils/dateFormat";
 import formatCurrency from "../../utils/formatCurrency"; // Assuming this utility exists
+import { useGlobalContext } from "../../context/globalContext";
 
-// The IncomeItem component now expects 'income' as a single prop object,
 // and 'onDelete', 'onUpdateSuccess' as callback functions.
-function IncomeItem({ income, onDelete, onUpdateSuccess, indicatorColor }) { // Added indicatorColor here
+function IncomeItem({ income, onDelete, indicatorColor }) { // Added indicatorColor here
     // Destructure properties from the 'income' object
     const { _id, title, amount, start_date, end_date,frequency, category, description, type } = income;
+      const { updateIncome, getCashFlow } = useGlobalContext();
 
     // State to control edit mode
     const [isEditing, setIsEditing] = useState(false);
@@ -106,29 +107,21 @@ function IncomeItem({ income, onDelete, onUpdateSuccess, indicatorColor }) { // 
                 alert('Amount must be positive.');
                 return;
             }
-
             // Your backend API URL for updating an asset
-            const response = await axios.put(
-                `http://localhost:8000/api/v1/update-income/${editedIncome._id}`,
-                editedIncome // The edited data from state
-            );
+             updateIncome(editedIncome._id, editedIncome); // Call the updateIncome function from context
 
-            console.log('Update successful:', response.data);
+            console.log('Update successful:');
             setIsEditing(false); // Exit edit mode
-
-            // Call the callback from the parent component to update the UI
-            if (onUpdateSuccess) {
-                onUpdateSuccess(response.data.asset); // Pass the updated asset object from the server response
-            }
-
         } catch (error) {
             console.error('Error updating income:', error.response ? error.response.data : error.message);
             alert(`Failed to update income: ${error.response ? error.response.data.message : error.message}`);
         }
+        
     };
 
     // Render logic based on `isEditing` state
     return (
+        
         <IncomeItemStyled indicator={indicatorColor}>
             <div className="icon">
                 {categoryIcon()}
@@ -190,7 +183,7 @@ function IncomeItem({ income, onDelete, onUpdateSuccess, indicatorColor }) { // 
                                 bRad={'5%'}
                                 bg={'var(--primary-color)'}
                                 color={'#fff'}
-                                onClick={handleSaveClick}
+                                onClick={() => { handleSaveClick();}} // Use the function to update income and refresh cash flow
                                 text="Save"
                             />
                             <Button
@@ -239,7 +232,7 @@ function IncomeItem({ income, onDelete, onUpdateSuccess, indicatorColor }) { // 
                                     color={'#fff'}
                                     iColor={'#fff'}
                                     hColor={'var(--color-red)'} // Changed hover to red for delete
-                                    onClick={() => onDelete(_id)} // Use _id directly
+                                     onClick={() => { onDelete(_id);getCashFlow(); }} // Use _id directly
                                 />
                             </div>
                         </div>

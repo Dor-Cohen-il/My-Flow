@@ -10,7 +10,7 @@ function Expenses() {
   const {expenses, getExpense, deleteExpense} = useGlobalContext();
   useEffect(() => {
     getExpense();
-  }, [getExpense]);
+  }, []);
 
   const handleExpenseUpdate = (updatedAsset) => {
     const updatedExpenses = expenses.map(expense =>
