@@ -40,7 +40,7 @@ function Incomes() {
                 </div>
                 <div className="incomes">
                     {incomes && Array.isArray(incomes) && incomes.map((income) => {
-                        const {_id, title, amount, start_date, end_date, frequency, category, description, type} = income;
+                        const {_id, amount, start_date, end_date, frequency, category, description, type} = income;
                         return (
                             <IncomeItem
                                 key={_id}

@@ -10,7 +10,6 @@ const { DateTime, Duration, Interval} = require('luxon');
 function ExpenseForm() {
     const {addExpense, getExpense, error, getCashFlow} = useGlobalContext()
     const [inputState, setInputState] = React.useState({
-        title: '',
         amount: '',
         start_date: new Date(),
         end_date: null,
@@ -19,7 +18,7 @@ function ExpenseForm() {
         description: ''
     });
 
-    const { title, amount, start_date, category, description, end_date, frequency } = inputState;
+    const { amount, start_date, category, description, end_date, frequency } = inputState;
 
     const handleInput = (name) => (e) => {
         setInputState({
@@ -37,26 +36,29 @@ function ExpenseForm() {
         getExpense();
         getCashFlow(startDate, endDate, intervalType);
         setInputState({
-        title: '',
-        amount: '',
-        start_date: new Date(),
-        end_date: null,
-        frequency: 'one-time',
-        category: 'other',
-        description: ''
+            amount: '',
+            start_date: new Date(),
+            end_date: null,
+            frequency: 'one-time',
+            category: 'other',
+            description: ''
         })
     }
     return (
         <FormStyled onSubmit={handleSubmit}>
             {error && <p className="error">{ error }</p>}   
-            <div className="input-control">
-                <input 
-                    type="text" 
-                    value={title}
-                    name={'title'} 
-                    placeholder="Expense title"
-                    onChange={handleInput('title')}
-                />
+            <div className="selects input-control">
+                <select required value={category} name="category" id="category" onChange={handleInput('category')}>
+                    <option value="" disabled >Select Option</option>
+                    <option value="education">Education</option>
+                    <option value="groceries">Groceries</option>
+                    <option value="health">Health</option>
+                    <option value="subscriptions">Subscriptions</option>
+                    <option value="takeaways">Takeaways</option>
+                    <option value="clothing">Clothing</option>  
+                    <option value="travelling">Travelling</option>  
+                    <option value="other">Other</option>  
+                </select>
             </div>
             <div className="input-control">
                 <input value={amount}  
@@ -96,22 +98,9 @@ function ExpenseForm() {
                     <option value="weekly">Weekly</option>
                     <option value="biweekly">Bi-Weekly</option>
                     <option value="monthly">Monthly</option>
-                    <option value="quatrly">Quatrly</option>
+                    <option value="quarterly">Quarterly</option>
                     <option value="halfyear">Half-Year</option>
                     <option value="yearly">Yearly</option>  
-                </select>
-            </div>
-            <div className="selects input-control">
-                <select required value={category} name="category" id="category" onChange={handleInput('category')}>
-                    <option value="" disabled >Select Option</option>
-                    <option value="education">Education</option>
-                    <option value="groceries">Groceries</option>
-                    <option value="health">Health</option>
-                    <option value="subscriptions">Subscriptions</option>
-                    <option value="takeaways">Takeaways</option>
-                    <option value="clothing">Clothing</option>  
-                    <option value="travelling">Travelling</option>  
-                    <option value="other">Other</option>  
                 </select>
             </div>
             <div className="input-control">

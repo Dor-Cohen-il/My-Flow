@@ -202,7 +202,6 @@ export const GlobalProvider = ({ children }) => {
 
             incomesList.forEach(item => {
                 delete item._id;
-                delete item.title;
                 delete item.category;
                 delete item.description;
                 delete item.createdAt;
@@ -220,7 +219,6 @@ export const GlobalProvider = ({ children }) => {
 
             expensesList.forEach(item => {
                 delete item._id;
-                delete item.title;
                 delete item.category;
                 delete item.description;
                 delete item.createdAt;
