@@ -2,7 +2,6 @@ import React, {useEffect} from "react";
 import styled from "styled-components";
 import { InnerLayout } from "../../styles/layout";
 import Chart from "../Chart/Chart";
-import { dollar } from "../../utils/icons";
 import { useGlobalContext } from "../../context/globalContext";
 import formatCurrency from "../../utils/formatCurrency";
 import History from "../History/History"
@@ -11,9 +10,6 @@ function Dashboard() {
   const { totalIncome, totalExpense, getIncome, getExpense} = useGlobalContext()
 
   useEffect(() => {
-    getIncome()
-    getExpense()
-
   }, [])
   return (
     <DashboardStyled>

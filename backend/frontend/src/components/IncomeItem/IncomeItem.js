@@ -12,8 +12,8 @@ import { useGlobalContext } from "../../context/globalContext";
 // and 'onDelete', 'onUpdateSuccess' as callback functions.
 function IncomeItem({ income, onDelete, indicatorColor }) { // Added indicatorColor here
     // Destructure properties from the 'income' object
-    const { _id, title, amount, start_date, end_date,frequency, category, description, type } = income;
-      const { updateIncome, getCashFlow } = useGlobalContext();
+    const { _id, amount, start_date, end_date, frequency, category, description, type } = income;
+    const { updateIncome, getCashFlow } = useGlobalContext();
 
     // State to control edit mode
     const [isEditing, setIsEditing] = useState(false);
@@ -21,7 +21,6 @@ function IncomeItem({ income, onDelete, indicatorColor }) { // Added indicatorCo
     // State to hold the values being edited. Initialize with current income values.
     const [editedIncome, setEditedIncome] = useState({
         _id: _id,
-        title: title,
         amount: amount,
         type: type, // e.g., 'income'
         category: category,
@@ -83,7 +82,6 @@ function IncomeItem({ income, onDelete, indicatorColor }) { // Added indicatorCo
         // Reset editedIncome to original values on cancel
         setEditedIncome({
             _id: _id,
-            title: title,
             amount: amount,
             type: type,
             category: category,
@@ -99,7 +97,7 @@ function IncomeItem({ income, onDelete, indicatorColor }) { // Added indicatorCo
     const handleSaveClick = async () => {
         try {
             // Validate basic input before sending (optional but recommended)
-            if (!editedIncome.title || !editedIncome.amount || !editedIncome.category || !editedIncome.start_date) {
+            if (!editedIncome.amount || !editedIncome.category || !editedIncome.start_date) {
                 alert('Please fill in all required fields.');
                 return;
             }
@@ -132,10 +130,10 @@ function IncomeItem({ income, onDelete, indicatorColor }) { // Added indicatorCo
                     <div className="edit-form">
                         <input
                             type="text"
-                            name="title"
-                            value={editedIncome.title}
+                            name="category"
+                            value={editedIncome.category}
                             onChange={handleChange}
-                            placeholder="Income Title"
+                            placeholder="Category"
                         /><br />
                         <input
                             type="number"
@@ -145,13 +143,6 @@ function IncomeItem({ income, onDelete, indicatorColor }) { // Added indicatorCo
                             placeholder="Income Amount"
                         /><br />
                         {/* You might want a <select> here for categories if they are fixed */}
-                        <input
-                            type="text"
-                            name="category"
-                            value={editedIncome.category}
-                            onChange={handleChange}
-                            placeholder="Category"
-                        /><br />
                         <DatePicker
                             name="start_date"
                             value={editedIncome.start_date}
@@ -200,7 +191,7 @@ function IncomeItem({ income, onDelete, indicatorColor }) { // Added indicatorCo
                 ) : (
                     // Display mode
                     <>
-                        <h5>{title} - {formatCurrency(amount)} </h5>
+                        <h5>{category} - {formatCurrency(amount)} </h5>
                         <div className="title-place"></div> {/* This div seems empty, you might want to remove it or add content */}
                         <div className="inner-content">
                             <div className="text">

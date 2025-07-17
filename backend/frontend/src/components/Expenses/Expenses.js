@@ -28,7 +28,7 @@ function Expenses() {
         </div>
         <div className="expense">
           {expenses && Array.isArray(expenses) && expenses.map((expense) => {
-              const {_id, title, amount, date, category, description, type} = expense;
+              const {_id, amount, date, category, description, type} = expense;
               return <ExpenseItem
                         key={_id}
                         expense={expense} // Pass the entire income object

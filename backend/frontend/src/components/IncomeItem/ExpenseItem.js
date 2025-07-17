@@ -16,7 +16,7 @@ import { useGlobalContext } from "../../context/globalContext";
 // and 'onDelete', 'onUpdateSuccess' as callback functions.
 function ExpenseItem({ expense, onDelete, indicatorColor }) { // Added indicatorColor here
     // Destructure properties from the 'income' object
-    const { _id, title, amount, start_date, end_date,frequency, category, description, type } = expense;
+    const { _id, amount, start_date, end_date, frequency, category, description, type } = expense;
     const { updateExpense, getCashFlow } = useGlobalContext();
 
     // State to control edit mode
@@ -25,7 +25,6 @@ function ExpenseItem({ expense, onDelete, indicatorColor }) { // Added indicator
     // State to hold the values being edited. Initialize with current income values.
     const [editedExpense, setEditedExpense] = useState({
         _id: _id,
-        title: title,
         amount: amount,
         type: type, // e.g., 'income'
         category: category,
@@ -87,7 +86,6 @@ function ExpenseItem({ expense, onDelete, indicatorColor }) { // Added indicator
         // Reset editedIncome to original values on cancel
         setEditedExpense({
             _id: _id,
-            title: title,
             amount: amount,
             type: type,
             category: category,
@@ -101,7 +99,7 @@ function ExpenseItem({ expense, onDelete, indicatorColor }) { // Added indicator
     const handleSaveClick = async () => {
         try {
             // Validate basic input before sending (optional but recommended)
-            if (!editedExpense.title || !editedExpense.amount || !editedExpense.category || !editedExpense.start_date) {
+            if (!editedExpense.amount || !editedExpense.category || !editedExpense.start_date) {
                 alert('Please fill in all required fields.');
                 return;
             }
@@ -129,10 +127,10 @@ function ExpenseItem({ expense, onDelete, indicatorColor }) { // Added indicator
                     <div className="edit-form">
                         <input
                             type="text"
-                            name="title"
-                            value={editedExpense.title}
+                            name="category"
+                            value={editedExpense.category}
                             onChange={handleChange}
-                            placeholder="Income Title"
+                            placeholder="Category"
                         /><br />
                         <input
                             type="number"
@@ -140,14 +138,6 @@ function ExpenseItem({ expense, onDelete, indicatorColor }) { // Added indicator
                             value={editedExpense.amount}
                             onChange={handleChange}
                             placeholder="Income Amount"
-                        /><br />
-                        {/* You might want a <select> here for categories if they are fixed */}
-                        <input
-                            type="text"
-                            name="category"
-                            value={editedExpense.category}
-                            onChange={handleChange}
-                            placeholder="Category"
                         /><br />
                         <DatePicker
                             name="start_date"
@@ -197,7 +187,7 @@ function ExpenseItem({ expense, onDelete, indicatorColor }) { // Added indicator
                 ) : (
                     // Display mode
                     <>
-                        <h5>{title} - {formatCurrency(amount)} </h5>
+                        <h5>{category} - {formatCurrency(amount)} </h5>
                         <div className="title-place"></div> {/* This div seems empty, you might want to remove it or add content */}
                         <div className="inner-content">
                             <div className="text">

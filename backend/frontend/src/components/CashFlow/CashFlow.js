@@ -14,7 +14,7 @@ function Cashflow() {
   const [selectedStartDate, setSelectedStartDate] = useState(new Date("2025-07-01")); // Default to beginning of a month for example
   const [selectedEndDate, setSelectedEndDate] = useState(new Date("2025-07-31"));   // Default to end of a month
   const [selectedInterval, setSelectedInterval] = useState('monthly'); // Default interval
-  // This useEffect will run when selectedStartDate, selectedEndDate, or selectedInterval changes
+
   useEffect(() => {
     // Only call getCashFlow if all selected values are valid
     if (selectedStartDate instanceof Date && !isNaN(selectedStartDate) &&

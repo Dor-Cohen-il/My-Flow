@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { InnerLayout } from "../../styles/layout";
 
 function Button({name, icon, onClick, bg, bPad, color,bRadius}) {
   return (

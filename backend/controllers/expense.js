@@ -2,10 +2,9 @@ const expenseSchema = require("../models/expenseModel")
 
 
 exports.addExpense = async (req, res) => {
-    const {title, amount, type, category, description, start_date, end_date, frequency} = req.body
+    const { amount, type, category, description, start_date, end_date, frequency} = req.body
 
     const expense = expenseSchema({
-        title,
         amount,
         type,
         start_date,
@@ -17,14 +16,14 @@ exports.addExpense = async (req, res) => {
 
     try {
         //Validations
-        if(!title || !category || !amount || !start_date){
-            return res.status(400).json({message: 'All fields are required'})
+        if (!category || !amount || !start_date) {
+            return res.status(400).json({ message: 'All fields are required' })
         }
-        if(amount <= 0 || !amount=== 'number'){
-            return res.status(400).json({message: 'Amount must be a positive number'})
+        if (amount <= 0 || !amount=== 'number') {
+            return res.status(400).json({ message: 'Amount must be a positive number' })
         }
         await expense.save()
-        res.status(200).json({message: 'expense added'})
+        res.status(200).json({ message: 'expense added' })
     } catch (error) {
         res.status(500).json({message: 'Server error'})
 
@@ -56,7 +55,7 @@ exports.deleteExpense = async (req, res) =>{
 
 exports.updateExpense = async (req, res) => {
     const { id } = req.params; // Get the ID from the URL parameters
-    const { title, amount, type, category, description, start_date, end_date, frequency } = req.body; // Get the update data from the request body
+    const { amount, type, category, description, start_date, end_date, frequency } = req.body; // Get the update data from the request body
     if (!id) {
         return res.status(400).json({ message: 'Asset ID is required for update.' });
     }
@@ -65,7 +64,6 @@ exports.updateExpense = async (req, res) => {
         const updatedExpense = await expenseSchema.findByIdAndUpdate(
             id,
             { // This is the update object. Only include fields you want to change.
-                title,
                 amount,
                 type,
                 category,

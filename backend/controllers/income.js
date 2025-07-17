@@ -2,10 +2,9 @@ const IncomeSchema = require("../models/incomeModel")
 
 
 exports.addIncome = async (req, res) => {
-    const {title, amount, type, start_date ,end_date ,frequency , category, description, date} = req.body
+    const {amount, type, start_date ,end_date ,frequency , category, description, date} = req.body
 
     const income = IncomeSchema({
-        title,
         amount,
         type,
         start_date,
@@ -17,16 +16,16 @@ exports.addIncome = async (req, res) => {
 
     try {
         //Validations
-        if(!title || !category || !amount || !start_date){
-            return res.status(400).json({message: 'All fields are required'})
+        if (!category || !amount || !start_date) {
+            return res.status(400).json({ message: 'All fields are required' })
         }
-        if(amount <= 0 || !amount=== 'number'){
-            return res.status(400).json({message: 'Amount must be a positive number'})
+        if (amount <= 0 || !amount=== 'number') {
+            return res.status(400).json({ message: 'Amount must be a positive number' })
         }
         await income.save()
-        res.status(200).json({message: 'Income added'})
+        res.status(200).json({ message: 'Income added' })
     } catch (error) {
-        res.status(500).json({message: 'Server error'})
+        res.status(500).json({ message: 'Server error' })
 
     }
     console.log(income);
@@ -56,7 +55,7 @@ exports.deleteIncome = async (req, res) =>{
 
 exports.updateIncome = async (req, res) => {
     const { id } = req.params; // Get the ID from the URL parameters
-    const { title, amount, type, category, description, start_date, end_date, frequency } = req.body; // Get the update data from the request body
+    const { amount, type, category, description, start_date, end_date, frequency } = req.body; // Get the update data from the request body
     if (!id) {
         return res.status(400).json({ message: 'Asset ID is required for update.' });
     }
@@ -64,8 +63,7 @@ exports.updateIncome = async (req, res) => {
     try {
         const updatedIncome = await IncomeSchema.findByIdAndUpdate(
             id,
-            { // This is the update object. Only include fields you want to change.
-                title,
+            { 
                 amount,
                 type,
                 category,
@@ -75,8 +73,8 @@ exports.updateIncome = async (req, res) => {
                 frequency
             },
             {
-                new: true, // Return the updated document
-                runValidators: true // Run schema validators on the update operation
+                new: true,
+                runValidators: true
             }
         );
 

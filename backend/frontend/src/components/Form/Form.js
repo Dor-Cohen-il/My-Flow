@@ -10,7 +10,6 @@ const { DateTime, Duration, Interval} = require('luxon');
 function Form() {
     const {addIncome, getIncome, error, getCashFlow} = useGlobalContext()
     const [inputState, setInputState] = React.useState({
-        title: '',
         amount: '',
         start_date: new Date(),
         end_date: '',
@@ -19,7 +18,7 @@ function Form() {
         description: ''
     });
 
-    const { title, amount, start_date, category, description, end_date, frequency } = inputState;
+    const { amount, start_date, category, description, end_date, frequency } = inputState;
 
     const handleInput = (name) => (e) => {
         setInputState({
@@ -37,26 +36,29 @@ function Form() {
         getIncome();
         getCashFlow(startDate, endDate, intervalType);
         setInputState({
-        title: '',
-        amount: '',
-        start_date: new Date(),
-        end_date: '',
-        frequency: 'one-time',
-        category: 'other',
-        description: ''
+            amount: '',
+            start_date: new Date(),
+            end_date: '',
+            frequency: 'one-time',
+            category: 'other',
+            description: ''
         })
     }
     return (
         <FormStyled onSubmit={handleSubmit}>
             {error && <p className="error">{ error }</p>}   
-            <div className="input-control">
-                <input 
-                    type="text" 
-                    value={title}
-                    name={'title'} 
-                    placeholder="Income title"
-                    onChange={handleInput('title')}
-                />
+            <div className="selects input-control">
+                <select required value={category} name="category" id="category" onChange={handleInput('category')}>
+                    <option value=""  disabled >Income category</option>
+                    <option value="סטילס">סטילס</option>
+                    <option value="צלם שני">צלם שני</option>
+                    <option value="מגנטים">מגנטים</option>
+                    <option value="צלם שני יום מלא">צלם שני יום מלא</option>
+                    <option value="salary">Salary</option>
+                    <option value="freelancing">Freelancing</option>
+                    <option value="bank">Bank Transfer</option>  
+                    <option value="other">Other</option>  
+                </select>
             </div>
             <div className="input-control">
                 <input value={amount}  
@@ -99,19 +101,6 @@ function Form() {
                     <option value="quatrly">Quatrly</option>
                     <option value="halfyear">Half-Year</option>
                     <option value="yearly">Yearly</option>  
-                </select>
-            </div>
-            <div className="selects input-control">
-                <select required value={category} name="category" id="category" onChange={handleInput('category')}>
-                    <option value=""  disabled >Income category</option>
-                    <option value="סטילס">סטילס</option>
-                    <option value="צלם שני">צלם שני</option>
-                    <option value="מגנטים">מגנטים</option>
-                    <option value="צלם שני יום מלא">צלם שני יום מלא</option>
-                    <option value="salary">Salary</option>
-                    <option value="freelancing">Freelancing</option>
-                    <option value="bank">Bank Transfer</option>  
-                    <option value="other">Other</option>  
                 </select>
             </div>
             <div className="input-control">
