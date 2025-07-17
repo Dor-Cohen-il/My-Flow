@@ -1,4 +1,4 @@
-function formatCurrency(amount, currencyCode = 'USD') {
+function formatCurrency(amount, currencyCode = 'ILS') {
   // Always add a check for valid 'amount' to prevent errors if it's undefined/null/not a number
   if (typeof amount !== 'number' || isNaN(amount)) {
     return ''; // Or '0.00', 'N/A', or throw an error, depending on desired behavior

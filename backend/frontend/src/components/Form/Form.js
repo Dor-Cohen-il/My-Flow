@@ -5,9 +5,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useGlobalContext } from "../../context/globalContext";
 import Button from "../Button/Button";
 import { plus } from "../../utils/icons";
+const { DateTime, Duration, Interval} = require('luxon');
 
 function Form() {
-    const {addIncome, getIncome, error} = useGlobalContext()
+    const {addIncome, getIncome, error, getCashFlow} = useGlobalContext()
     const [inputState, setInputState] = React.useState({
         title: '',
         amount: '',
@@ -28,9 +29,13 @@ function Form() {
     };
 
     const handleSubmit = (e) => {
+        const startDate = DateTime.now().startOf('day').toJSDate();
+        const endDate = DateTime.now().plus({ months: 12 }).endOf('day').toJSDate();
+        const intervalType = 'weekly';
         e.preventDefault();
         addIncome(inputState);
         getIncome();
+        getCashFlow(startDate, endDate, intervalType);
         setInputState({
         title: '',
         amount: '',
@@ -55,7 +60,7 @@ function Form() {
             </div>
             <div className="input-control">
                 <input value={amount}  
-                    type="text" 
+                    type="number" 
                     name={'amount'} 
                     placeholder={'Income amount'}
                     onChange={handleInput('amount')} 
@@ -99,13 +104,13 @@ function Form() {
             <div className="selects input-control">
                 <select required value={category} name="category" id="category" onChange={handleInput('category')}>
                     <option value=""  disabled >Income category</option>
+                    <option value="סטילס">סטילס</option>
+                    <option value="צלם שני">צלם שני</option>
+                    <option value="מגנטים">מגנטים</option>
+                    <option value="צלם שני יום מלא">צלם שני יום מלא</option>
                     <option value="salary">Salary</option>
                     <option value="freelancing">Freelancing</option>
-                    <option value="investments">Investiments</option>
-                    <option value="stocks">Stocks</option>
-                    <option value="bitcoin">Bitcoin</option>
                     <option value="bank">Bank Transfer</option>  
-                    <option value="youtube">Youtube</option>  
                     <option value="other">Other</option>  
                 </select>
             </div>

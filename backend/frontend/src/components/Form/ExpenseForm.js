@@ -5,9 +5,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useGlobalContext } from "../../context/globalContext";
 import Button from "../Button/Button";
 import { plus } from "../../utils/icons";
+const { DateTime, Duration, Interval} = require('luxon');
 
 function ExpenseForm() {
-    const {addExpense, getExpense, error} = useGlobalContext()
+    const {addExpense, getExpense, error, getCashFlow} = useGlobalContext()
     const [inputState, setInputState] = React.useState({
         title: '',
         amount: '',
@@ -28,9 +29,13 @@ function ExpenseForm() {
     };
 
     const handleSubmit = (e) => {
+        const startDate = DateTime.now().startOf('day').toJSDate();
+        const endDate = DateTime.now().plus({ months: 12 }).endOf('day').toJSDate();
+        const intervalType = 'weekly';
         e.preventDefault();
         addExpense(inputState);
         getExpense();
+        getCashFlow(startDate, endDate, intervalType);
         setInputState({
         title: '',
         amount: '',
@@ -64,7 +69,7 @@ function ExpenseForm() {
             <div className="input-control">
                 <DatePicker
                     showIcon
-                    id='date'
+                    id='start_date'
                     selected={start_date}
                     dateFormat="dd/MM/yyyy"
                     onChange={(date) => {
@@ -75,7 +80,7 @@ function ExpenseForm() {
             <div className="input-control">
                 <DatePicker
                     showIcon
-                    id='date'
+                    id='end_date'
                     selected={end_date}
                     dateFormat="dd/MM/yyyy"
                     autoComplete="off"

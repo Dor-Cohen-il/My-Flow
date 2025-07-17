@@ -57,11 +57,6 @@ exports.deleteIncome = async (req, res) =>{
 exports.updateIncome = async (req, res) => {
     const { id } = req.params; // Get the ID from the URL parameters
     const { title, amount, type, category, description, start_date, end_date, frequency } = req.body; // Get the update data from the request body
-
-    // Optional: Log the ID and update data for debugging
-    console.log('Updating asset with ID:', id);
-    console.log('Update data:', req.body);
-
     if (!id) {
         return res.status(400).json({ message: 'Asset ID is required for update.' });
     }

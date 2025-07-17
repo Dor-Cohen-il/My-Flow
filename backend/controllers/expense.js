@@ -8,16 +8,16 @@ exports.addExpense = async (req, res) => {
         title,
         amount,
         type,
-        category,
-        description,
         start_date,
         end_date,
-        frequency
+        frequency,
+        category,
+        description
     })
 
     try {
         //Validations
-        if(!title || !category || !start_date){
+        if(!title || !category || !amount || !start_date){
             return res.status(400).json({message: 'All fields are required'})
         }
         if(amount <= 0 || !amount=== 'number'){
@@ -57,17 +57,12 @@ exports.deleteExpense = async (req, res) =>{
 exports.updateExpense = async (req, res) => {
     const { id } = req.params; // Get the ID from the URL parameters
     const { title, amount, type, category, description, start_date, end_date, frequency } = req.body; // Get the update data from the request body
-
-    // Optional: Log the ID and update data for debugging
-    console.log('Updating asset with ID:', id);
-    console.log('Update data:', req.body);
-
     if (!id) {
         return res.status(400).json({ message: 'Asset ID is required for update.' });
     }
 
     try {
-        const updatedExpense = await ExpenseSchema.findByIdAndUpdate(
+        const updatedExpense = await expenseSchema.findByIdAndUpdate(
             id,
             { // This is the update object. Only include fields you want to change.
                 title,
